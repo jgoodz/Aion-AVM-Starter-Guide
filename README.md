@@ -52,15 +52,17 @@ Aion4j Maven Plugin provides end to end development support for AVM based smart 
 
 Here you will:
 - Install Maven
+ https://docs.aion.network/docs/maven-and-aion4j
+- Install Maven's AVM archtype
+ https://github.com/satran004/avm-archetype
+          https://github.com/satran004/aion4j-maven-plugin/wiki/Aion4j-Maven-Plugin---User-Guide
 - Create Maven project
 - Point it to AVM testnet
 - edit smart contract
 - create new address, get AVM Testnet Aion
 - Deploy contract
 - Get Contract Address
-
-Sources:  https://github.com/satran004/avm-archetype
-          https://github.com/satran004/aion4j-maven-plugin/wiki/Aion4j-Maven-Plugin---User-Guide
+         
 
 ---
 
