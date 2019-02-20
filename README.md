@@ -33,11 +33,11 @@ The three parts to this tutorial are:
 </body>
 </html>
 ```
-- Inside the body, Create a page with Greet, setStore, and getStore buttons, and a text input
+- Inside the body, Create a page with Greet, setString, and getString buttons, and a text input
 ``` <body>
 <input type="text" id="streetToGreet"></input> <button onclick="greet()">Greet</button><br>
-<input type="text" id="stringToSet"></input> <button onclick="setStorage()">set storage</button> <br>
-<button onclick="getStorage()">get storage</button>
+<input type="text" id="stringToSet"></input> <button onclick="setString()">set string</button> <br>
+<button onclick="getString()">get string</button>
 </body>
 ```
 - In your terminal, cd to the directory where index.html is saved, and Serve the webpage
@@ -175,12 +175,12 @@ public class HelloAvm
         return "Hello " + name + "!";
     }
 
-    public static void setStorage(String stringToStore) {
+    public static void setString(String stringToStore) {
         storage1 = stringToStore;
 
     }
 
-    public static String getStorage() {
+    public static String getString() {
         return storage1;
     }  
     
@@ -192,7 +192,7 @@ public class HelloAvm
 
 
 ```
-This new contract has additional getStorage and setStorage functions that can get and set values to the AVM testnet.
+This new contract has additional setString and getString functions that can get and set values to the AVM testnet.
 
 To compile your changes:
 
@@ -561,8 +561,8 @@ function getString() {
 #### connect buttons to functions
 in index.html, add function calls to the buttons, like so
 <button onclick="greet()">Greet</button>
-<button onclick="setString()">set storage</button>
-<button onclick="getString()">get storage</button>
+<button onclick="setString()">set string</button>
+<button onclick="getString()">get string</button>
 
 Try it out by right clicking to open your developer console.
 For the full code, try the sample projects in this repo.
