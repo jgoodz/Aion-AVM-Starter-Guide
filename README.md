@@ -109,7 +109,7 @@ Edit pom.xml file in the generated project and change &lt;aion4j.maven.plugin&gt
 ```
 <properties>
   ...
-   <aion4j.plugin.version>0.4.4</aion4j.plugin.version>
+   <aion4j.plugin.version>0.4.5</aion4j.plugin.version>
   ...
 </properties>
 ```
@@ -302,14 +302,8 @@ you can provide web3 rpc url information through
 $> mvn aion4j:deploy -Dweb3rpc.url=http://<host>:<port> ...
 ```
 
-
-
-beta - coming soon
+you can also add the web3 rpc url in the configs, so you don't have to specify in the command line every time.
 ```
-<configuration>
-      ...
-      <web3rpcUrl>http://host:port</web3rpcUrl>
-</configuration>
 ```
 
 The testnet is called *avm-testnet* (not Mastery) and we will use tokens from this network, and deploy our contract to this network
