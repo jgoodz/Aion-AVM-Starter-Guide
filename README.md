@@ -434,7 +434,7 @@ $> mvn aion4j:contract-txn -Dcontract=a0xxxxxx -Dmethod=greet -Dargs="-T AVMTest
 $> mvn aion4j:transfer -Dweb3rpc.url=http://host:port -Dfrom=a0xxx -Dto=a0xxxxxx -Dvalue=<value> -Dpassword=<password> -Premote
 ```
 
-
+---
 
 ## Connect Front End with Smart Contract
 - Install AIWA
@@ -444,14 +444,20 @@ $> mvn aion4j:transfer -Dweb3rpc.url=http://host:port -Dfrom=a0xxx -Dto=a0xxxxxx
 - connect buttons to functions
 - test the Dapp!
 
+---
+
 ### 1. Install AIWA
 Download and install the Aiwa browser extension. Available on Chrome.
 
 https://chrome.google.com/webstore/detail/aiwa/objigohafkcoodmofgmifblmfidicehc?hl=en
 
+---
+
 
 ### 2. Connect Aiwa to AVM testnet
 use nodesmith url used in the remote call
+
+---
 
 ### 3. Add Web3 to frontend
 
@@ -461,6 +467,7 @@ In index.html file, add  `<script type="text/javascript" src="./web3.min.js"></s
 include web3.min.js in your dApp directory.
 get the file here https://github.com/aion-kelvin/AvmFuntime/blob/master/myhack/web3.min.js
 
+---
 
 ### 4. Set up a javascript file.
 
@@ -479,6 +486,7 @@ let accountAddress = "<your aiwa address>";
 let accountPK = "<your aiwa private key>";
 
 ```
+---
 
 ### 5. Implement Javascript functions
 
@@ -540,6 +548,8 @@ function sendTransaction(method, argType, arg) {
 }
 ```
 
+---
+
 Create different methods to call transactions based on what the user wants to send
 
 ```
@@ -557,6 +567,8 @@ function getString() {
   sendTransaction("getString", null , null) 
 }
 ```
+---
+
 ### 6. connect buttons to functions
 in index.html, add function calls to the buttons, like so
 <button onclick="greet()">Greet</button>
@@ -565,6 +577,8 @@ in index.html, add function calls to the buttons, like so
 
 Try it out by right clicking to open your developer console.
 For the full code, try the sample projects in this repo.
+
+---
 
 ### 7. test the dApp
 `Serve the Dapp using python -m SimpleHTTPServer`
