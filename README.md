@@ -22,7 +22,7 @@ The three parts to this tutorial are:
 - cd to Example-Dapp
 - serve the webpage (optional)
   `python -m SimpleHTTPServer 8000`
-- replace account address and account private key with your address and private key in index.js
+- replace account address and account private key with your address and private key from Aiwa, in index.js
 - try the buttons!
 
 # Step By Step Guide
