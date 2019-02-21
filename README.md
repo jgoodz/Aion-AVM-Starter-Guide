@@ -103,7 +103,7 @@ The generated project has a sample HelloAVM contract.
 
 ---
 
-### 2. Edit pom.xml
+### 3. Edit pom.xml
 
 Edit pom.xml file in the generated project and change &lt;aion4j.maven.plugin&gt; version to the latest release version. Please refer to [aion4j maven plugin](https://github.com/satran004/aion4j-maven-plugin) project page for the latest release version.
 
@@ -135,7 +135,7 @@ To enable class-verifier goal which verifies usage of allowed apis in the contra
 
 ---
 
-### 3. Initialize and copy required AVM libraries
+### 4. Initialize and copy required AVM libraries
 By default, the plugin will copy required avm jars to the lib folder under the project directory. But you can also point to a different avm lib folder by changing "avmLibDir" property in aion4j plugin configuration in pom.xml if you want to use a different version of AVM. But for now, let's use the default avm version bundled in the plugin.
 
 ```
@@ -144,7 +144,7 @@ $> mvn initialize
 
 ---
 
-### 4. Build the project
+### 5. Build the project
 
 ```
 $> mvn clean install
@@ -155,7 +155,7 @@ $> mvn clean install
 
 <a name="using_embedded"></a>
 
-### 5. Include a custom smart contract
+### 6. Include a custom smart contract
 
 Navigate to the smart contract in the Maven Project, under src/main/java. Replace the existing java contract with the following code:
 ```
@@ -390,7 +390,7 @@ You should see a json output. Get the "contractAddress" value for the deployed c
 
 ---
 
-### 3. Call contract method
+### 5. Call contract method
 This goal makes a web3 rpc call for "eth_call" function to remote kernel.
 
 ```
@@ -411,7 +411,7 @@ http://string-functions.com/hex-string.aspx
 
 ---
 
-### 4. Send contract transaction
+### 6. Send contract transaction
 This goal makes a web3 rpc call for "eth_sendTransaction" function to remote kernel
 
 ```
@@ -426,7 +426,7 @@ $> mvn aion4j:contract-txn -Dcontract=a0xxxxxx -Dmethod=greet -Dargs="-T AVMTest
 
 ---
 
-### 5. To transfer from one address to another
+### 7. To transfer from one address to another
 
 ```
 $> mvn aion4j:transfer -Dweb3rpc.url=http://host:port -Dfrom=a0xxx -Dto=a0xxxxxx -Dvalue=<value> -Dpassword=<password> -Premote
@@ -442,16 +442,16 @@ $> mvn aion4j:transfer -Dweb3rpc.url=http://host:port -Dfrom=a0xxx -Dto=a0xxxxxx
 - connect buttons to functions
 - test the Dapp!
 
-#### Install AIWA
+### 1. Install AIWA
 Download and install the Aiwa browser extension. Available on Chrome.
 
 https://chrome.google.com/webstore/detail/aiwa/objigohafkcoodmofgmifblmfidicehc?hl=en
 
 
-#### Connect Aiwa to AVM testnet
+### 2. Connect Aiwa to AVM testnet
 use nodesmith url used in the remote call
 
-#### Add Web3 to frontend
+### 3. Add Web3 to frontend
 
 The beta version of web3 for avm is avilable at the aion repository below. 
 (note: aionweb3 injected from AIWA will not have the avm module at the time of writing)
@@ -460,7 +460,7 @@ include web3.min.js in your dApp directory.
 get the file here https://github.com/aion-kelvin/AvmFuntime/blob/master/myhack/web3.min.js
 
 
-#### Set up a javascript file.
+### 4. Set up a javascript file.
 
 Create a file called index.js in the same folder as index.html.
 
@@ -478,7 +478,7 @@ let accountPK = "<your aiwa private key>";
 
 ```
 
-#### Implement Javascript functions
+### 5. Implement Javascript functions
 
 Create a function to send a transaction to the contract we deployed previously. 
 We use the avm methods of web3 to interact with the contract.
@@ -555,7 +555,7 @@ function getString() {
   sendTransaction("getString", null , null) 
 }
 ```
-#### connect buttons to functions
+### 6. connect buttons to functions
 in index.html, add function calls to the buttons, like so
 <button onclick="greet()">Greet</button>
 <button onclick="setString()">set string</button>
@@ -564,7 +564,7 @@ in index.html, add function calls to the buttons, like so
 Try it out by right clicking to open your developer console.
 For the full code, try the sample projects in this repo.
 
-#### test the dApp
+### 7. test the dApp
 `Serve the Dapp using python -m SimpleHTTPServer`
 
 
