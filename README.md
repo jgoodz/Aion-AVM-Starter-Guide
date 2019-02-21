@@ -156,8 +156,6 @@ $> mvn clean install
 ```
 **Note:** During build, the plugin checks for apis which are not allowed in the java smart contract and shows the error accordingly.
 
-**Note:** When you deploy
-
 <a name="using_embedded"></a>
 
 ### 6. Include a custom smart contract
