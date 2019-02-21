@@ -570,16 +570,3 @@ For the full code, try the sample projects in this repo.
 `Serve the Dapp using python -m SimpleHTTPServer`
 
 
-
-
-
-
-
-
----
-# why build with aion
-## 1. Smart contracts in Java  = tools + faster development
-## 2. Save your data to multiple blockchains = better Crash Fault Tolerance
-
-
-http://string-functions.com/hex-string.aspx
