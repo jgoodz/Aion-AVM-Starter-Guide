@@ -11,7 +11,7 @@ The three parts to this tutorial are:
 
 # Quick Start
 
-- Install Aiwa (warning: you ma need to delete MetaMask. This issue is being worked on)
+- Install Aiwa Chrome extension
 - Clone this tutorial
  `Git Clone https://github.com/BlockDevsUnited/Aion-AVM-Starter-Guide.git`
 - cd to Example-Dapp
@@ -24,7 +24,7 @@ The three parts to this tutorial are:
 
 ## Create an HTML frontend
 
-- Open a code editor. Atom of VsCode will work fine.
+- Open a code editor. Atom or VsCode will work fine.
 - create basic html page called index.html
 - Open html and body tags
 ```
@@ -40,7 +40,7 @@ The three parts to this tutorial are:
 <button onclick="getString()">get string</button>
 </body>
 ```
-- In your terminal, cd to the directory where index.html is saved, and Serve the webpage
+- In your terminal, cd to the directory where index.html is saved, and serve the webpage
 `python -m SimpleHTTPServer 8000`
 
 - or if you don't have python installed, navigate to the directory and double-click index.html to open in the browser
@@ -55,7 +55,7 @@ Here you will:
  https://docs.aion.network/docs/maven-and-aion4j
 - Install Maven's AVM archtype
  https://github.com/satran004/avm-archetype
-          https://github.com/satran004/aion4j-maven-plugin/wiki/Aion4j-Maven-Plugin---User-Guide
+ https://github.com/satran004/aion4j-maven-plugin/wiki/Aion4j-Maven-Plugin---User-Guide
 - Create Maven project
 - Point it to AVM testnet
 - edit smart contract
@@ -73,6 +73,7 @@ Here you will:
 <!--<a name="setup_build"></a>-->
 
 ### 1. Build Maven
+Maven is a build tool that will help us deploy Java programs to AVM blockchain.
 ```
 git clone https://github.com/satran004/aion4j-maven-plugin.git
 ```
@@ -96,7 +97,7 @@ Run the following maven command to create an AVM project.
 ```
 $> mvn archetype:generate -DarchetypeGroupId=org.aion4j -DarchetypeArtifactId=avm-archetype -DarchetypeVersion=0.5
 ```
-Follow the instruction to enter groupId, artifactId and package information to generate the project.
+Follow the instruction to enter groupId, artifactId and package information to generate the project. (You can put in anything, I suggest you use strings ie. "foo", "bar", etc. as it may have a tendency to confuse numbers for other commands)
 
 The generated project has a sample HelloAVM contract.
 
@@ -403,7 +404,7 @@ mvn aion4j:call -Dcontract=a0xxxxxx -Dmethod=greet -Dargs="-T AVMTestnet" [-Dval
 
 ```
 
-Response is in Hex format, try to convert with online tool:
+For older Maven versions: if response is in Hex format, try to convert with online tool:
 (remove the first 4 digits after the x)
 
 http://string-functions.com/hex-string.aspx
