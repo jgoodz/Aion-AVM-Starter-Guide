@@ -81,14 +81,17 @@ git clone https://github.com/satran004/aion4j-maven-plugin.git
 ```
 
 Install avm.jar to local .m2 repo for compilation
-``` ./mvnw initialize
+``` 
+./mvnw initialize
 ```
 
 Compile the plugin
-``` ./mvnw clean install -DskipITs
+``` 
+./mvnw clean install -DskipITs
 ```
 Run integration tests
-``` ./mvnw integration-test
+``` 
+./mvnw integration-test
 ```
 
 ### 2. Create AVM java project
