@@ -1,6 +1,11 @@
-# Aion-AVM-Starter-Guide
+# Aion-Java-Starter-Guide
 
-This Tutorial shows you step by step how to create a front end Dapp that interacts with the Aion Virtual Machine (AVM)
+This Tutorial shows you step by step how to create a front end Dapp that interacts with the Aion kernel that uses the new Aion Virtual Machine (AVM)
+
+*We will refer to AVM as the Aion Kernel that employs the new JVM Java Compiler*
+
+## Java Compiler (AVM)
+AVM is a lightweight version of the JVM, the compiler for Java code. Security enhacements have been incorporated to prepare it for an adversarial blockchain environment. In this tutorial we will be able to deploy Java programs as smart contracts and interact with it from the test network.
 
 The three parts to this tutorial are:
 
