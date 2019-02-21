@@ -326,24 +326,22 @@ and change the "mainnet" portion of the url to "avmtestnet"
 
 For more info on nodesmith, check out Aion docs: https://learn.aion.network/docs/nodesmith
 
-Edit your pom.xml with the new remote endpoint
+Edit your pom.xml with the new remote endpoint. Profiles section is at the end of the pom file, not to be confused with local configuration under build/plugins/plugin.
 
 ```
-<configuration>
-    <mode>remote</mode>
-    <avmLibDir>${avm.lib.dir}</avmLibDir>
-    <web3rpcUrl>https://api.nodesmith.io/v1/aion/avmtestnet/jsonrpc?apiKey=xxxxxxxxxxxxxx</web3rpcUrl>
-</configuration>
-```
-
----
-
-#### Address
-The aion4j maven goals use account address in different goals to do different operations. -
-* -D properties in maven command.  
-Example:
-```
-mvn aion4j:deploy -Daddress=ax000000 ...
+<profiles>
+ <profile>
+  <id>remote</id>
+  <build>
+    <plugins>
+      <plugin>
+        ...
+        <configuration>
+           <mode>remote</mode>
+           <avmLibDir>${avm.lib.dir}</avmLibDir>
+           <web3rpcUrl>https://api.nodesmith.io/v1/aion/avmtestnet/jsonrpc?apiKey=xxxxxxxxxxxxxx</web3rpcUrl>
+        </configuration>
+        ...
 ```
 
 ---
@@ -412,6 +410,9 @@ $> mvn aion4j:get-balance -Daddress={your address here} -Premote
 Use the same deploy command but add the `-Premote` command
 
 #### Deploy method 1: Set your environment variables
+
+Recommended for the rest of this tutorial
+
 On Mac and Linux:
 ```
 export pk=YOURPRIVATEKEY
@@ -422,6 +423,8 @@ On Windows:
 set pk=YOURPRIVATEKEY
 set web3rpc_url=YOURNODESMITHENDPOINT
 ```
+Now we won't specify the address anymore (private key) or the remote url endpoint. Maven will also store other important info for you, as we will see. 
+
 You're ready to deploy the contract:
 ```
 $> mvn aion4j:deploy -Premote
@@ -432,7 +435,12 @@ If you didn't set your environment variables:
 ```
 $> mvn aion4j:deploy -Dweb3rpc.url=YOURNODESMITHENDPOINT -Dpk=YOURPRIVATEKEY -Premote
 ```
-and it will return you a tx hash
+and it will return you a tx hash, you can inspect but Maven will store your last transction has for you.
+
+#### What happens when you deploy a Java Program to AVM?
+The peer-to-peer network shares compatible versions of the same Aion kernel. That includes the AVM "computer", the ledger history, and a transaction pool. The kernel from your local machine will generate an address for your program called a "contract address" that is also given some memory space or storage. In our contract that includes our function methods (greet, getString, setString) and fields (String storage1). 
+This is broadcast to other peers in the network, and will be queued for the next block in their transaction pool. It is a request to add this program to the collective network memory. Once the transaction is successfully added to a block, it is broadcast as valid to the whole network. Now anyone can call this program from any of its copies in any peer of the network.
+A similar transaction flow happens when you want to update the string field in the program. Since it is stored in the now public program, changes made to the field are also public and need to be validated by everyone.
 
 ---
 
@@ -440,51 +448,37 @@ and it will return you a tx hash
 Use the transaction hash from the above step to get the details.
 
 ```
-$> mvn aion4j:get-receipt -DtxHash=<tx_hash> -Dweb3rpc.url=http://host:port -Premote
+$> mvn aion4j:get-receipt -Premote
 ```
-You should see a json output. Get the "contractAddress" value for the deployed contract address.
+
+You should see a json output.
 A transaction gets queued to be validated into the next block. This usually takes 10-30 seconds. A transaction receipt that returns "null" will tell you that it has not been committed to the ledger yet. If it completes, you will get more info, including the contract address of your program.
 
 Wait and get the transaction receipt.
-Save your contract address for the next steps.
+Maven will remember your contract address, assuming you only have one. You should save the contract address anyway for when we connect to the contract from our web app.
+
+*Save your contract address*
 
 ---
 
-### 5. Call contract method
-This goal makes a web3 rpc call for "eth_call" function to remote kernel.
+### 5. Call contract method: "greet"
+This goal makes a web3 rpc call for "eth_call" function to remote kernel. Maven remembers your last contract address
+Specify your method ("greet", "setString" or "getString") and your arguments, if any.
 
 ```
-$> mvn aion4j:call -Dweb3rpc.url=http://host:port -Daddress=a0xxxx -Dcontract=a0xxxxxx -Dmethod=greet -Dargs="-T AVMTestnet" [-Dvalue=<value>] -Premote
+$> mvn aion4j:call -Dmethod=greet -Dargs="-T 'AVMTestnet'" -Premote
 ```
-
-or, if web3rpc.url and address are set as environment variable or pom.xml, use following
-
-```
-mvn aion4j:call -Dcontract=a0xxxxxx -Dmethod=greet -Dargs="-T 'AVMTestnet'" [-Dvalue=<value>] -Premote
-
-```
-**note: sometimes quotation marks in the wrong format will give you an error. The most accurate way is to manually type quotation marks in the command line**
+*note: sometimes quotation marks in the wrong format will give you an error. The most accurate way is to manually type quotation marks in the command line*
 
 You will get a response that says "Hello ..'your string'"
 
-For older Maven versions: if response is in Hex format, try to convert with online tool:
-
-
-http://string-functions.com/hex-string.aspx
-
 ---
 
-### 6. Send contract transaction
+### 6. Send contract transaction: "setString"
 This goal makes a web3 rpc call for "eth_sendTransaction" function to remote kernel
 
 ```
-$> mvn aion4j:contract-txn -Dweb3rpc.url=http://host:port -Daddress=a0xxxx -Dcontract=a0xxxxxx -Dmethod=greet -Dargs="-T AVMTestnet" [-Dvalue=<value>] -Premote
-```
-
-or, if web3rpc.url and address are set as environment variable or pom.xml, use following
-
-```
-$> mvn aion4j:contract-txn -Dcontract=a0xxxxxx -Dmethod=greet -Dargs="-T AVMTestnet" [-Dvalue=<value>] -Premote
+$> mvn aion4j:contract-txn -Dmethod=setString -Dargs="-T 'My First String'" -Premote
 ```
 
 Any transaction that updates the ledger state will take 10-30 seconds. Use the `get-receipt` method to check your transactions are complete before proceeding to the next step, or you will get a error if your transaction is incomplete.
@@ -493,10 +487,10 @@ Also periodically check if you have enough funds in your account.
 
 ---
 
-### 7. To transfer from one address to another
+### Appendix: To transfer from one address to another
 
 ```
-$> mvn aion4j:transfer -Dweb3rpc.url=http://host:port -Dfrom=a0xxx -Dto=a0xxxxxx -Dvalue=<value> -Dpassword=<password> -Premote
+$> mvn aion4j:transfer -Dto=a0xxxxxx -Dvalue=<amount> -Premote
 ```
 
 ---
@@ -510,11 +504,6 @@ $> mvn aion4j:transfer -Dweb3rpc.url=http://host:port -Dfrom=a0xxx -Dto=a0xxxxxx
 - test the Dapp!
 
 ---
-
-
-
----
-
 
 ### 2. Connect Aiwa to AVM testnet
 
@@ -538,12 +527,11 @@ Create a file called index.js in the same folder as index.html.
 
 Include index.js in index.HTML   `<script type="text/javascript" src="./index.js"></script>`
 
-Declare your Web3 object `let web3 = new Web3(new Web3.providers.HttpProvider("http://138.91.123.106:8545"));`
+Declare your Web3 object `let web3 = new Web3(new Web3.providers.HttpProvider("https://api.nodesmith.io/v1/aion/avmtestnet/jsonrpc?apiKey=xxxxxxxxxxxxxx"));`
 
 create variables for the contract address, your address and your private key.
 
 ```
-
 let contractAddress = "<address of the contract you deployed on Maven>";
 let accountAddress = "<your aiwa address>";
 let accountPK = "<your aiwa private key>";
@@ -558,44 +546,77 @@ We use the avm methods of web3 to interact with the contract.
 We will pass the method name (greet, setString, or getString), the argument type as "String" and the argument.
 All our arguments are encoded to hex format, then decoded from hex 
 
+Web3 is an interface for javascript to communicate with the blockchain network, as we did with Maven on the command line. 
+
+#### To summarize, there are two types of invocations:
+1. Transaction
+2. Call
+
+Transaction is anything that will update (write) the state of the ledger on the blockchain. Setting a string will change the string stored on our address space. The string is saved forever and for everyone to see, unless it is explicitly changed. This is the more intensive and expensive type of invocation, because changing the state means updating a new block, and waiting for everyone to validate and agree on it.
+
+A Call is anything that is read-only and doesn't update the state. We don't have to wait for the transaction to complete.
+
+Other than these two differences, a call and transaction are the same.
+
+#### Javascript Web3 Transaction Steps
+In a nutshell,
+1. Specify our contract call - what method and arguments to compute
+2. Prepare the transaction object
+3. Sign Transaction with our private key for security
+4. Send final Signed Transaction
+5. After transaction completes, we do a call (read-only)
+
 ```
-function sendTransaction(method, argType, arg) {
+function sendTransaction(methodName, argType, arg) {
 
   var stringToGreet = document.getElementById("stringToGreet").value;
 
-    // 1. Contract method definition
+    // 1. Specify our contract call - what method and arguments to compute
     console.log(web3);
-    let method = web3.avm.method(method).argTypes(argType);
-    let data = method.encodeToHex(arg);
-
-    // 2. Create the transaction object
+  let method, data;
+    if (argType) {
+      method = web3.avm.method(methodName).argTypes(argType);
+      data = method.encodeToHex(arg);
+    } else {
+    // currently passing null blank string is not supported for sending no argTypes or data, this is the only way:
+      method = web3.avm.method(methodName).argTypes();
+      data = method.encodeToHex();
+    }
+ 
+    // 2. Prepare the transaction object
     let txObject = {
-        from: accountAddress, // your account address
+        from: accountAddress, 
         to: contractAddress,
-        gas: 2000000,
+        gas: 2000000, // this is max amount
         data: data,
-        type: '0xf'
+        type: '0xf' 
     };
 
-    // 3. Sign Transaction
+    // 3. Sign Transaction with our private key for security
     let signTxObject;
 
-    web3.eth.accounts.signTransaction( // Signing function
+    web3.eth.accounts.signTransaction( 
         txObject, accountPK
     ).then(function(res) {
         signedTxObject = res;
 
-        // 4. Send Signed Transaction
+    // 4. Send final Signed Transaction
         web3.eth.sendSignedTransaction(
           signedTxObject.rawTransaction
         ).on('transactionHash', txHash => {
           console.log("txHash", txHash) // Print txHash
-          getValueOnComplete()
+          
         }).on('receipt',
-          receipt => { console.log("tx receipt", receipt) } // Print txReceipt
+          receipt => { 
+            console.log("tx receipt", receipt) 
+            getValueOnComplete() //see below
+          } // Print txReceipt
+
         );
     });
     function getValueOnComplete() {
+    
+    // 5. After transaction completes, we do a call (read-only)
         var result = web3.eth.call({
             to: contractAddress, // contract address
             data: data
@@ -603,7 +624,6 @@ function sendTransaction(method, argType, arg) {
 
         result.then(function(value){
           value = web3.avm.decodeOneObjectFromHex(value);
-
           console.log(value);
         })
     }
@@ -613,7 +633,8 @@ function sendTransaction(method, argType, arg) {
 
 ---
 
-Create different methods to call transactions based on what the user wants to send
+Create different methods to call transactions based on what the user wants to send 
+This is purely javascript logic, nothing new from blockchain.
 
 ```
 function greet ()  {
@@ -634,16 +655,19 @@ function getString() {
 
 ### 6. connect buttons to functions
 in index.html, add function calls to the buttons, like so
+
 <button onclick="greet()">Greet</button>
 <button onclick="setString()">set string</button>
 <button onclick="getString()">get string</button>
 
+
+Again, purely HTML and Javascript, nothing new from blockchain.
 Try it out by right clicking to open your developer console.
-For the full code, try the sample projects in this repo.
+For the full web app code, try the sample project in this repo.
 
 ---
 
 ### 7. test the dApp
 `Serve the Dapp using python -m SimpleHTTPServer`
-
+Or simply open the file index.html from your file explorer
 
