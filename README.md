@@ -108,6 +108,19 @@ Follow the instruction to enter groupId, artifactId and package information to g
 The generated project has a sample HelloAVM contract.
 
 
+---
+
+### Debugger 
+If you want to try the debugger feature, install IntelliJ: https://www.jetbrains.com/idea/download/#section=mac
+File -> Open and choose created project directory
+
+#### Test your contract using the debugger tool
+
+The sample project downloaded from the Archetype comes with a sample test.
+
+1. Set your debug points
+
+2. Run the tests
 
 ---
 
@@ -123,16 +136,18 @@ Edit pom.xml file in the generated project and change &lt;aion4j.maven.plugin&gt
 </properties>
 ```
 
+
 ---
 
 
 **Contract Main-class**:
 
-Verify contract's main class is same as entry in **contract.main.class** property in pom.xml's plugin section.
+Verify contract's main class is same as entry in **contract.main.class** property in pom.xml's plugin section. This is done automatically so you won't have to change anything.
 
 ```
 <contract.main.class>org.test.HelloAvm</contract.main.class>
 ```
+
 **Class-Verifier for whitelist classes**
 
 To enable class-verifier goal which verifies usage of allowed apis in the contract, you need to make sure that "class-verifier" goal is uncommented in pom.xml. This goal is executed during compile phase of maven build cycle.
@@ -301,15 +316,25 @@ Alternatively, you can change the "mode" property in the plugin configuration (p
 ---
 
 #### Web3 Rpc Url
-The aion4j plugin needs the url to web3 rpc endpoint.
 
-you can provide web3 rpc url information through
-* -Dweb3rpc.url=http://host:port in maven command line
-```
-$> mvn aion4j:deploy -Dweb3rpc.url=http://<host>:<port> ...
-```
+The new AVM testnet is called *avm-testnet* (not Mastery, which is our previous version using a Eth fork called FVM) and we will use tokens from this network, and deploy our contract to this network
+to reach the avm testnet, use nodesmith https://dashboard.nodesmith.io
+and change the "mainnet" portion of the url to "avmtestnet"
 
-you can also add the web3 rpc url in the configs, so you don't have to specify in the command line every time.
+
+![Alt text](./img/nodesmith.png?raw=true "Title")
+
+For more info on nodesmith, check out Aion docs: https://learn.aion.network/docs/nodesmith
+
+Edit your pom.xml with the new remote endpoint
+
+```
+<configuration>
+    <mode>remote</mode>
+    <avmLibDir>${avm.lib.dir}</avmLibDir>
+    <web3rpcUrl>https://api.nodesmith.io/v1/aion/avmtestnet/jsonrpc?apiKey=xxxxxxxxxxxxxx</web3rpcUrl>
+</configuration>
+```
 
 ---
 
@@ -325,13 +350,31 @@ mvn aion4j:deploy -Daddress=ax000000 ...
 
 ### 1. Create account
 
-We will create an account on a network, not just local.
-Set a password of your choice, this is not a permanent workflow and is being updated
+#### Install AIWA
+Download and install the Aiwa browser extension. Available on Chrome.
 
-```
-$> mvn aion4j:create-account -Dweb3rpc.url=http://host:port -Dpassword=test123 -Premote
-```
-Save the account address
+https://chrome.google.com/webstore/detail/aiwa/objigohafkcoodmofgmifblmfidicehc?hl=en
+
+It will ask you to save a password and a seed phrase. This is a two-step authentication. 
+A wallet is a type of public key. Blockchain uses public/private key cryptography to keep your account safe. Your private key is your seed phrase and your claim to any tokens associated to your wallet public key. **Never give out your private key or upload to github etc.**
+
+
+#### connect AIWA to AVM Testnet
+Go to the network connection setting (dropdown where is says Mainnet or Mastery) and connect to our seed node we created custom for the tutorial.
+
+URL: http://138.91.123.106
+PORT: 8545 
+
+Now your wallet is connected to the AVM testnet.
+
+more info here: https://blog.aion.network/java-smart-contracts-hit-the-testnet-ef0b8810f26e
+
+
+#### Copy your wallet address
+
+Wallet address is your account we will use to fund transactions and deployment of programs. Each interaction with the blockchain network costs energy (gas) and we will need an account to provide funds.
+
+All aion addresses start with "0xa" so you will know this is correct
 
 ---
 
@@ -348,7 +391,7 @@ Faucet instructions:
 https://faucets.blockxlabs.com/
 1. select Aion 
 2. in network dropdown select avm-testnet
-3. enter your address to fund. You can fund the address you created in previous step.
+3. enter your address to fund. You can fund the address you created in previous step in your AIWA.
 
 It will send you 1 testnet Aion in about 30 seconds
 
@@ -359,19 +402,37 @@ Aion docs will provide more information here: https://learn.aion.network/docs/fa
 
 ---
 
-### 3. To unlock the account and deploy, run
+### 3. Deploy your Java Program to the testnet
 
+Check that everything is working and accurate
 
-You can unlock the account explicitly and then deploy
 ```
-$> mvn aion4j:unlock -Dweb3rpc.url=http://host:port -Daddress=ax00000 -Dpassword=<password> -Premote
-$> mvn aion4j:deploy -Dweb3rpc.url=http://host:port -Daddress=ax00000 -Dpassword=<password> -Premote
+$> mvn aion4j:get-balance -Daddress={your address here} -Premote
+```
+Use the same deploy command but add the `-Premote` command
+
+#### Deploy method 1: Set your environment variables
+On Mac and Linux:
+```
+export pk=YOURPRIVATEKEY
+export web3rpc_url=YOURNODESMITHENDPOINT
+```
+On Windows:
+```
+set pk=YOURPRIVATEKEY
+set web3rpc_url=YOURNODESMITHENDPOINT
+```
+You're ready to deploy the contract:
+```
+$> mvn aion4j:deploy -Premote
 ```
 
-#### To get balance
+#### Deploy method 2: Without setting environment variables
+If you didn't set your environment variables:
 ```
-$> mvn aion4j:get-balance -Dweb3rpc.url=http://host:port -Daddress=a0xxxx -Premote
+$> mvn aion4j:deploy -Dweb3rpc.url=YOURNODESMITHENDPOINT -Dpk=YOURPRIVATEKEY -Premote
 ```
+and it will return you a tx hash
 
 ---
 
@@ -382,6 +443,10 @@ Use the transaction hash from the above step to get the details.
 $> mvn aion4j:get-receipt -DtxHash=<tx_hash> -Dweb3rpc.url=http://host:port -Premote
 ```
 You should see a json output. Get the "contractAddress" value for the deployed contract address.
+A transaction gets queued to be validated into the next block. This usually takes 10-30 seconds. A transaction receipt that returns "null" will tell you that it has not been committed to the ledger yet. If it completes, you will get more info, including the contract address of your program.
+
+Wait and get the transaction receipt.
+Save your contract address for the next steps.
 
 ---
 
@@ -395,12 +460,15 @@ $> mvn aion4j:call -Dweb3rpc.url=http://host:port -Daddress=a0xxxx -Dcontract=a0
 or, if web3rpc.url and address are set as environment variable or pom.xml, use following
 
 ```
-mvn aion4j:call -Dcontract=a0xxxxxx -Dmethod=greet -Dargs="-T AVMTestnet" [-Dvalue=<value>] -Premote
+mvn aion4j:call -Dcontract=a0xxxxxx -Dmethod=greet -Dargs="-T 'AVMTestnet'" [-Dvalue=<value>] -Premote
 
 ```
+**note: sometimes quotation marks in the wrong format will give you an error. The most accurate way is to manually type quotation marks in the command line**
+
+You will get a response that says "Hello ..'your string'"
 
 For older Maven versions: if response is in Hex format, try to convert with online tool:
-(remove the first 4 digits after the x)
+
 
 http://string-functions.com/hex-string.aspx
 
@@ -419,6 +487,10 @@ or, if web3rpc.url and address are set as environment variable or pom.xml, use f
 $> mvn aion4j:contract-txn -Dcontract=a0xxxxxx -Dmethod=greet -Dargs="-T AVMTestnet" [-Dvalue=<value>] -Premote
 ```
 
+Any transaction that updates the ledger state will take 10-30 seconds. Use the `get-receipt` method to check your transactions are complete before proceeding to the next step, or you will get a error if your transaction is incomplete.
+
+Also periodically check if you have enough funds in your account. 
+
 ---
 
 ### 7. To transfer from one address to another
@@ -430,7 +502,7 @@ $> mvn aion4j:transfer -Dweb3rpc.url=http://host:port -Dfrom=a0xxx -Dto=a0xxxxxx
 ---
 
 ## Connect Front End with Smart Contract
-- Install AIWA
+
 - Add web3 source to front end
 - Point your app to avm testnet and your contract
 - transaction functions
@@ -439,24 +511,14 @@ $> mvn aion4j:transfer -Dweb3rpc.url=http://host:port -Dfrom=a0xxx -Dto=a0xxxxxx
 
 ---
 
-### 1. Install AIWA
-Download and install the Aiwa browser extension. Available on Chrome.
 
-https://chrome.google.com/webstore/detail/aiwa/objigohafkcoodmofgmifblmfidicehc?hl=en
 
 ---
 
 
 ### 2. Connect Aiwa to AVM testnet
 
-The new AVM testnet is called *avm-testnet* (not Mastery, which is our previous version using a Eth fork called FVM) and we will use tokens from this network, and deploy our contract to this network
-to reach the avm testnet, use nodesmith https://dashboard.nodesmith.io
-and change the "mainnet" portion of the url to "avmtestnet"
-
-
-![Alt text](./img/nodesmith.png?raw=true "Title")
-
-For more info, check out Aion docs: https://learn.aion.network/docs/nodesmith
+Use the nodesmith URL used in the remote rpc step
 
 ---
 
