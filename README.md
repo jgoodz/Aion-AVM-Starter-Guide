@@ -96,6 +96,7 @@ Run integration tests
 
 ### 2. Create AVM java project
 The fastest way to create a AVM project is using a maven archetype - [avm-archetype](https://github.com/satran004/avm-archetype).
+Archetype is a Maven project templating toolkit. This is an existing Java tool. An archetype is defined as an original pattern or model from which all other things of the same kind are made. 
 
 Run the following maven command to create an AVM project.
 
@@ -105,6 +106,8 @@ $> mvn archetype:generate -DarchetypeGroupId=org.aion4j -DarchetypeArtifactId=av
 Follow the instruction to enter groupId, artifactId and package information to generate the project. (You can put in anything, I suggest you use strings ie. "foo", "bar", etc. as it may have a tendency to confuse numbers for other commands)
 
 The generated project has a sample HelloAVM contract.
+
+
 
 ---
 
@@ -307,8 +310,7 @@ $> mvn aion4j:deploy -Dweb3rpc.url=http://<host>:<port> ...
 ```
 
 you can also add the web3 rpc url in the configs, so you don't have to specify in the command line every time.
-```
-```
+
 
 The testnet is called *avm-testnet* (not Mastery) and we will use tokens from this network, and deploy our contract to this network
 to reach the avm testnet, use nodesmith https://dashboard.nodesmith.io
