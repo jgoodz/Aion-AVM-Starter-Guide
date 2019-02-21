@@ -24,6 +24,8 @@ The three parts to this tutorial are:
 
 ## Create an HTML frontend
 
+(For a quickstart, you can copy the HTML project sample from this repo)
+
 - Open a code editor. Atom or VsCode will work fine.
 - create basic html page called index.html
 - Open html and body tags
