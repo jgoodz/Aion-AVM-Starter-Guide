@@ -311,16 +311,6 @@ $> mvn aion4j:deploy -Dweb3rpc.url=http://<host>:<port> ...
 
 you can also add the web3 rpc url in the configs, so you don't have to specify in the command line every time.
 
-
-The testnet is called *avm-testnet* (not Mastery) and we will use tokens from this network, and deploy our contract to this network
-to reach the avm testnet, use nodesmith https://dashboard.nodesmith.io
-and change the "mainnet" portion of the url to "avmtestnet"
-
-
-![Alt text](./img/nodesmith.png?raw=true "Title")
-
-For more info, check out Aion docs: https://learn.aion.network/docs/nodesmith
-
 ---
 
 #### Address
@@ -458,7 +448,15 @@ https://chrome.google.com/webstore/detail/aiwa/objigohafkcoodmofgmifblmfidicehc?
 
 
 ### 2. Connect Aiwa to AVM testnet
-use nodesmith url used in the remote call
+
+The new AVM testnet is called *avm-testnet* (not Mastery, which is our previous version using a Eth fork called FVM) and we will use tokens from this network, and deploy our contract to this network
+to reach the avm testnet, use nodesmith https://dashboard.nodesmith.io
+and change the "mainnet" portion of the url to "avmtestnet"
+
+
+![Alt text](./img/nodesmith.png?raw=true "Title")
+
+For more info, check out Aion docs: https://learn.aion.network/docs/nodesmith
 
 ---
 
